@@ -23,13 +23,6 @@ module "eks" {
   cluster_name    = "${var.environment_name}-eks-cluster"
   cluster_version = "1.30"
 
-  # EKS Addons
-  cluster_addons = {
-    coredns    = {}
-    kube-proxy = {}
-    vpc-cni    = {}
-  }
-
   vpc_id     = data.terraform_remote_state.vpc.outputs.vpc_id
   subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnets_id
 
@@ -38,7 +31,7 @@ module "eks" {
       instance_types = ["t3a.medium"]
 
       min_size     = 1
-      max_size     = 2
+      max_size     = 1
       desired_size = 1
     }
   }
