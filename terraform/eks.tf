@@ -2,7 +2,7 @@ data "terraform_remote_state" "vpc" {
   backend = "s3"
 
   config = {
-    bucket = "goodsystems-staging-terraform-state"
+    bucket = "${var.TFSTATE_S3BUCKET_PREFIX}-${var.environment_name}-terraform-state"
     key    = "terraform-network/terraform.tfstate"
     region = "us-east-1"
   }
