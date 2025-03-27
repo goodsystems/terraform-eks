@@ -10,7 +10,7 @@ data "terraform_remote_state" "vpc" {
 
 locals {
   tags = {
-    Blueprint  = "${var.environment_name}-eks-cluster"
+    Blueprint  = "${var.environment_name}-eks"
     GithubRepo = "github.com/aws-ia/terraform-aws-eks-blueprints"
   }
 }
