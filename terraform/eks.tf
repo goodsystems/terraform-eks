@@ -28,10 +28,10 @@ module "eks" {
 
   access_entries = {
     developer = {
-      principal_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/*"
+      principal_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/zuzanarad"
 
       policy_associations = {
-        example = {
+        developer = {
           policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
           access_scope = {
             namespaces = ["default"]
