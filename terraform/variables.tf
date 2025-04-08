@@ -18,5 +18,4 @@ variable "project" {
 variable "TFSTATE_S3BUCKET_PREFIX" {
   description = "default s3 bucket prefix"
   default     = "goodsystems"
-
 }

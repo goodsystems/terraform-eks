@@ -1,9 +1,11 @@
+data "aws_caller_identity" "current" {}
+
 data "terraform_remote_state" "vpc" {
   backend = "s3"
 
   config = {
-    bucket = "${var.TFSTATE_S3BUCKET_PREFIX}-${var.environment_name}-terraform-state"
-    key    = "terraform-network/terraform.tfstate"
+    bucket = "${var.TFSTATE_S3BUCKET_PREFIX}-${var.environment_name}-tofu-state"
+    key    = "terraform-network/tofu.tfstate"
     region = "us-east-1"
   }
 }
@@ -17,14 +19,32 @@ locals {
 
 
 module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.11"
+  source  = "registry.opentofu.org/terraform-aws-modules/eks/aws"
+  version = "v20.35.0"
+
 
   cluster_name    = "${var.environment_name}-eks-cluster"
-  cluster_version = "1.30"
+  cluster_version = "1.32"
 
-  vpc_id     = data.terraform_remote_state.vpc.outputs.vpc_id
-  subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnets_id
+  access_entries = {
+    developer = {
+      principal_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/*"
+
+      policy_associations = {
+        example = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
+          access_scope = {
+            namespaces = ["default"]
+            type       = "namespace"
+          }
+        }
+      }
+    }
+  }
+
+  vpc_id                   = data.terraform_remote_state.vpc.outputs.vpc_id
+  subnet_ids               = data.terraform_remote_state.vpc.outputs.private_subnets_id
+  control_plane_subnet_ids = data.terraform_remote_state.vpc.outputs.public_subnets_id
 
   eks_managed_node_groups = {
     initial = {
