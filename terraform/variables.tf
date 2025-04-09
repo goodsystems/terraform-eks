@@ -19,3 +19,7 @@ variable "TFSTATE_S3BUCKET_PREFIX" {
   description = "default s3 bucket prefix"
   default     = "goodsystems"
 }
+
+variable "principal_arn" {
+  description = "The arn of the principal to be used for access"
+}
