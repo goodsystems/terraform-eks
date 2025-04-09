@@ -18,21 +18,30 @@ locals {
 }
 
 
+
+
 module "eks" {
-  source  = "registry.opentofu.org/terraform-aws-modules/eks/aws"
-  version = "v20.35.0"
+  source  = "registry.terraform.io/terraform-aws-modules/eks/aws"
+  version = "20.35.0"
+
 
 
   cluster_name                   = "${var.environment_name}-eks-cluster"
   cluster_version                = "1.32"
   cluster_endpoint_public_access = true
+  # create_kms_key                 = false
+  # cluster_encryption_config = {
+  #     provider_key_arn = "arn:aws:kms:us-east-1:596979533546:key/0a2c4b5e-3f8d-4b7c-9f6d-0a2c4b5e3f8d"
+  #     resources       = ["secrets"]
+  #   }
+
 
   access_entries = {
-    developer = {
-      principal_arn = "arn:aws:iam::596979533546:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_AdministratorAccess_4bc67a84123b49a6"
+    administrator = {
+      principal_arn = "${var.principal_arn}"
 
       policy_association = {
-        name   = "developer"
+        name   = "administrator"
         policy = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
       }
     }
