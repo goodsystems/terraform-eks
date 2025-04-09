@@ -23,21 +23,17 @@ module "eks" {
   version = "v20.35.0"
 
 
-  cluster_name    = "${var.environment_name}-eks-cluster"
-  cluster_version = "1.32"
+  cluster_name                   = "${var.environment_name}-eks-cluster"
+  cluster_version                = "1.32"
+  cluster_endpoint_public_access = true
 
   access_entries = {
     developer = {
-      principal_arn = "arn:aws:iam::711319931294:user/zuzana"
+      principal_arn = "arn:aws:iam::596979533546:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_AdministratorAccess_4bc67a84123b49a6"
 
-      policy_associations = {
-        developer = {
-          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSAdminPolicy"
-          access_scope = {
-            namespaces = ["default"]
-            type       = "namespace"
-          }
-        }
+      policy_association = {
+        name   = "developer"
+        policy = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
       }
     }
   }
