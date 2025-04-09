@@ -34,17 +34,15 @@ module "eks" {
   #     provider_key_arn = "arn:aws:kms:us-east-1:596979533546:key/0a2c4b5e-3f8d-4b7c-9f6d-0a2c4b5e3f8d"
   #     resources       = ["secrets"]
   #   }
-
-
   access_entries = {
     administrator = {
       principal_arn = "${var.principal_arn}"
-
-      policy_association = {
-        name   = "administrator"
-        policy = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
-        access_scope = {
-          type = "cluster"
+      policy_associations = {
+        admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = {
+            type = "cluster"
+          }
         }
       }
     }
