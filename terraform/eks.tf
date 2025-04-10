@@ -4,11 +4,15 @@ data "terraform_remote_state" "vpc" {
   backend = "s3"
 
   config = {
-    bucket = "${var.TFSTATE_S3BUCKET_PREFIX}-${var.environment_name}-tofu-state"
-    key    = "terraform-network/tofu.tfstate"
+    bucket = "${var.TFSTATE_S3BUCKET_PREFIX}-${var.environment_name}-terraform-state"
+    key    = "terraform-network/terraform.tfstate"
     region = "us-east-1"
   }
 }
+
+# data "aws_kms_key" "eks-by-alias" {
+#   key_id = "eks/${var.environment_name}-eks-cluster"
+# }
 
 locals {
   tags = {
@@ -21,9 +25,8 @@ locals {
 
 
 module "eks" {
-  source  = "registry.terraform.io/terraform-aws-modules/eks/aws"
-  version = "20.35.0"
-
+  source  = "registry.opentofu.org/terraform-aws-modules/eks/aws"
+  version = "v20.35.0"
 
 
   cluster_name                   = "${var.environment_name}-eks-cluster"
@@ -31,7 +34,7 @@ module "eks" {
   cluster_endpoint_public_access = true
   # create_kms_key                 = false
   # cluster_encryption_config = {
-  #     provider_key_arn = "arn:aws:kms:us-east-1:596979533546:key/0a2c4b5e-3f8d-4b7c-9f6d-0a2c4b5e3f8d"
+  #     provider_key_arn = data.aws_kms_key.eks-by-alias.arn
   #     resources       = ["secrets"]
   #   }
   access_entries = {
@@ -47,7 +50,6 @@ module "eks" {
       }
     }
   }
-
   vpc_id                   = data.terraform_remote_state.vpc.outputs.vpc_id
   subnet_ids               = data.terraform_remote_state.vpc.outputs.private_subnets_id
   control_plane_subnet_ids = data.terraform_remote_state.vpc.outputs.public_subnets_id
