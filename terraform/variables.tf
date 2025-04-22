@@ -1,25 +1,31 @@
 variable "region" {
   default     = "us-east-1"
-  description = "default region"
+  description = "Default region"
+  type        = string
 }
 
 variable "environment_name" {
-  description = "default environment type"
+  description = "Default environment name"
+  type        = string
 }
 
 variable "environment_slug" {
-  description = "default environment slug"
+  description = "Default environment slug"
+  type        = string
 }
 
 variable "project" {
-  description = "default project name"
+  description = "Default project name"
+  type        = string
 }
 
 variable "TFSTATE_S3BUCKET_PREFIX" {
-  description = "default s3 bucket prefix"
+  description = "Default s3 bucket prefix"
   default     = "goodsystems"
+  type        = string
 }
 
 variable "principal_arn" {
   description = "The arn of the principal to be used for access"
+  type        = string
 }
