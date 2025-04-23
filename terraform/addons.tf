@@ -12,4 +12,6 @@ module "eks-blueprints-addons" {
       most_recent = true
     }
   }
+
+  enable_aws_load_balancer_controller = true
 }
