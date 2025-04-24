@@ -10,9 +10,6 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
-data "aws_kms_key" "eks-by-alias" {
-  key_id = "alias/eks/${var.environment_name}-eks-cluster"
-}
 
 locals {
   tags = {
@@ -29,11 +26,6 @@ module "eks" {
   cluster_name                   = "${var.environment_name}-eks-cluster"
   cluster_version                = "1.32"
   cluster_endpoint_public_access = true
-  create_kms_key                 = false
-  cluster_encryption_config = {
-    provider_key_arn = data.aws_kms_key.eks-by-alias.arn
-    resources        = ["secrets"]
-  }
 
   access_entries = {
     administrator = {
