@@ -1,8 +1,8 @@
-data "aws_iam_policy" "AmazonEBSCSIDriverPolicy" {
+data "aws_iam_policy" "AmazonEBSCSIDriver" {
   name = "AmazonEBSCSIDriverPolicy"
 }
 
-resource "aws_iam_role" "CSIDriverRole" {
+resource "aws_iam_role" "AmazonEBSCSIDriver" {
   name = "AmazonEKSPodIdentityAmazonEBSCSIDriverRole"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
@@ -21,9 +21,9 @@ resource "aws_iam_role" "CSIDriverRole" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "mazonEBSCSIDriverPolicyAttachment" {
-  policy_arn = data.aws_iam_policy.AmazonEBSCSIDriverPolicy.arn
-  role       = aws_iam_role.CSIDriverRole.name
+resource "aws_iam_role_policy_attachment" "AmazonEBSCSIDriver" {
+  policy_arn = data.aws_iam_policy.AmazonEBSCSIDriver.arn
+  role       = aws_iam_role.AmazonEBSCSIDriver.name
 }
 
 module "eks-blueprints-addons" {
@@ -39,8 +39,8 @@ module "eks-blueprints-addons" {
     aws-ebs-csi-driver = {
       most_recent = true
       pod_identity_association = {
-        role_arn        = aws_iam_role.CSIDriverRole.arn
-        service_account = "example-sa"
+        role_arn        = aws_iam_role.AmazonEBSCSIDriver.arn
+        service_account = "ebs-csi-controller-sa"
       }
     }
   }
