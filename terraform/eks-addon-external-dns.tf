@@ -1,5 +1,5 @@
-resource "aws_iam_role" "AmazonEKSVPCCNI" {
-  name = "AmazonEKSPodIdentityAmazonVPCCNIRole"
+resource "aws_iam_role" "external_dns" {
+  name = "AmazonEKSPodIdentityExternalDNSRole"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -17,17 +17,17 @@ resource "aws_iam_role" "AmazonEKSVPCCNI" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "AmazonEKSVPCCNI" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.AmazonEKSVPCCNI.name
+resource "aws_iam_role_policy_attachment" "external_dns" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
+  role       = aws_iam_role.external_dns.name
 }
 
-resource "aws_eks_addon" "vpc_cni" {
+resource "aws_eks_addon" "external_dns" {
   cluster_name                = module.eks.cluster_name
-  addon_name                  = "vpc-cni"
+  addon_name                  = "external-dns"
   resolve_conflicts_on_update = "OVERWRITE"
   pod_identity_association {
-    role_arn        = aws_iam_role.AmazonEKSVPCCNI.arn
-    service_account = "aws-node"
+    role_arn        = aws_iam_role.external_dns.arn
+    service_account = "external-dns"
   }
 }
