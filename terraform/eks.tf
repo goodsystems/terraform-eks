@@ -23,9 +23,10 @@ module "eks" {
   version = "v20.35.0"
 
 
-  cluster_name                   = "${var.environment_name}-eks-cluster"
-  cluster_version                = "1.32"
-  cluster_endpoint_public_access = true
+  cluster_name                    = "${var.environment_name}-eks-cluster"
+  cluster_version                 = "1.32"
+  cluster_endpoint_public_access  = true
+  kms_key_deletion_window_in_days = 7
 
   access_entries = {
     administrator = {
