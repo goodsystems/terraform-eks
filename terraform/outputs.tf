@@ -1,5 +1,5 @@
 output "cluster_name" {
-  value       = module.eks.cluster_id
+  value       = module.eks.cluster_name
   description = "The name of the EKS cluster"
 }
 
@@ -12,7 +12,7 @@ output "cluster_version" {
   description = "The version of the EKS cluster"
 }
 output "oidc_provider_arn" {
-  value       = module.eks.cluster_oidc_issuer_url
+  value       = module.eks.oidc_provider_arn
   description = "The OIDC provider ARN for the EKS cluster"
 }
 output "cluster_certificate_authority_data" {
